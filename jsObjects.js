@@ -151,4 +151,3 @@ var donutsObj= [
 donutsObj.forEach((element)=>{
     console.log(`${element.type} donuts cost $${element.cost} each`);
 });
-
