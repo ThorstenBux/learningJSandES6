@@ -8,7 +8,7 @@ console.log(blue.a);        //log: 1
 console.log(blue.b);        //log: 2
 console.log(blue.z);        //log: undefined
 
-const rose = Object.create(gold);
+const rose = Object.create(gold);       //Creates a lookup chain to fall through to the gold object for properties not available in rose-object
 rose.b = 2;
 console.log(rose.a);        //log: 1    
 console.log(rose.b);        //log: 2
