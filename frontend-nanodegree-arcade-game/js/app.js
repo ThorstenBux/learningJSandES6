@@ -1,47 +1,49 @@
 //General figure class that is base class for all figures in the game
 class Figure {
-    constructor(sprite, loc){
+    constructor(sprite, loc, speed = getRandomIntInclusive(10,50)){
+        //A string containing the image used to visualize the figure on the board.
         this.sprite = sprite;
+
+        //The location of a figure with is an object {x: ,y: }
         this.loc = loc;
+
+        //The figure speed which is a random value either 10 or 50 per default or passed in the constructor
+        this.speed = speed;
+    }
+    // Draw the figure on the screen, required method for game
+    render(){
+        // @ts-ignore
+        ctx.drawImage(Resources.get(this.sprite), this.loc.x, this.loc.y);
     }
 }
 
 
 // Enemies our player must avoid
-var Enemy = function() {
+class Enemy extends Figure{
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-
-    // The enemy location as x and y; y is random between 1 and 3
-    this.loc = {x:0,y:getRandomIntInclusive(2,4)};
-
-    //The enemy speed which is a random value either 10 or 50
-    this.speed = getRandomIntInclusive(10,50);
-    console.log(`Speed: ${this.speed} Loc: ${this.loc.x} ${this.loc.y}`);
+    constructor(sprite = 'images/enemy-bug.png'){
+        super(sprite,{x:0,y:getRandomIntInclusive(2,4)});
+        console.log(`Speed: ${this.speed} Loc: ${this.loc.x} ${this.loc.y}`);
+    }
+    // Update the enemy's position, required method for game
+    // Parameter: dt, a time delta between ticks
+    update(dt){
+        // You should multiply any movement by the dt parameter
+        // which will ensure the game runs at the same speed for
+        // all computers.
+        this.loc.x = this.loc.x + (this.speed * dt);
+    }
+    collision(){
+        //TODO implement collision with player
+        return false;
+    }
 };
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    this.loc.x = this.loc.x + (this.speed * dt);
-};
 
-Enemy.prototype.collision = function(){
-    //TODO implement collision with player
-    return false;
-}
-
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.loc.x, this.loc.y);
-};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -57,10 +59,6 @@ class Player extends Figure{
         // which will ensure the game runs at the same speed for
         // all computers.
         //this.loc.y = this.loc.y + (this.speed * dt);
-    }
-    render(){
-        // @ts-ignore
-        ctx.drawImage(Resources.get(this.sprite), this.loc.x, this.loc.y);
     }
     handleInput(key){
         switch (key){

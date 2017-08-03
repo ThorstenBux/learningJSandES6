@@ -102,7 +102,9 @@
     /* This object defines the publicly accessible functions available to
      * developers by creating a global Resources object.
      */
-    window.Resources = {
+    window.
+        // @ts-ignore
+        Resources = {
         load: load,
         get: get,
         onReady: onReady,
