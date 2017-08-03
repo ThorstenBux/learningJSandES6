@@ -1,3 +1,12 @@
+//General figure class that is base class for all figures in the game
+class Figure {
+    constructor(sprite, loc){
+        this.sprite = sprite;
+        this.loc = loc;
+    }
+}
+
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -37,12 +46,11 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-class Player {
-    constructor(){
-        //Load the initial image for the character
-        this.sprite = 'images/char-horn-girl.png';
+class Player extends Figure{
+    //Load the initial image for the character, if nothing is provided we use char-horn-girl.png
+    constructor(sprite='images/char-horn-girl.png'){
         //Load the initial location for the character; y is always 0 x is random between 0-4
-        this.loc = {x:getRandomIntInclusive(0,4), y:0};
+        super(sprite, {x:getRandomIntInclusive(0,4), y:0})
     }
     update(dt){
         // You should multiply any movement by the dt parameter
