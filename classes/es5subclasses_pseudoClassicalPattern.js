@@ -12,6 +12,7 @@ Van.prototype.grab = function(){
     console.log("grab");
 }
 Van.prototype = Object.create(CarS.prototype);
+Van.prototype.constructor = Van;
 
 var zed = new CarS(1);
 zed.move();
