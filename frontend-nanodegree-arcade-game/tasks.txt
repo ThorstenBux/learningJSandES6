@@ -24,3 +24,6 @@ Once you have completed implementing the Player and Enemy, you should instantiat
 Creating a new Player object
 Creating several new Enemies objects and placing them in an array called allEnemies
 
+TODO:
+ - Collision from top
+ - Refactor Enemy start location

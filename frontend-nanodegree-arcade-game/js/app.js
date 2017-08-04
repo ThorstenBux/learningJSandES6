@@ -2,10 +2,11 @@ const MAX_X = 400;
 const MAX_Y = 400;
 const ENEMY_MAX_Y = 230;
 const ENEMY_MIN_Y = 20;
+const MAX_ENEMIES = 5;
 
 //General figure class that is base class for all figures in the game
 class Figure {
-    constructor(sprite, loc, speed = getRandomIntInclusive(10,50),boundingBoxX = 20, boundingBoxY = 10){
+    constructor(sprite, loc, speed = getRandomIntInclusive(10,50),boundingBoxX = 20, boundingBoxY = 30){
         //A string containing the image used to visualize the figure on the board.
         this.sprite = sprite;
 
@@ -64,12 +65,16 @@ class Enemy extends Figure{
         }
         this.updateBoundingBox();
         this.checkForCollision();
+        //this.addNewEnemy();
     }
     checkForCollision(){
         //Now we check if the boundingBox of Enemy and Player collide
 
-        if( (this.boundingBox.xRight >= player.boundingBox.xLeft && this.boundingBox.yDown >= player.boundingBox.yUp && this.boundingBox.xLeft <= player.boundingBox.xRight) ) {
-                console.log("Collission!!!");
+        if( (this.boundingBox.xRight >= player.boundingBox.xLeft && 
+            this.boundingBox.yDown >= player.boundingBox.yUp && 
+            this.boundingBox.xLeft <= player.boundingBox.xRight &&
+            this.boundingBox.yUp <= player.boundingBox.yDown) ) {
+                resetGame();
         }
         return false;
     }
@@ -82,7 +87,7 @@ class Player extends Figure{
     //Load the initial image for the character, if nothing is provided we use char-horn-girl.png
     constructor(sprite='images/char-horn-girl.png'){
         //Load the initial location for the character; y is always 0 x is random between 0-4
-        super(sprite, {x:getRandomIntInclusive(0,MAX_X), y:MAX_Y},undefined,10,10)
+        super(sprite, {x:getRandomIntInclusive(0,MAX_X), y:MAX_Y},undefined,20,20)
         console.log(`Player: Speed: ${this.speed} Loc: ${this.loc.x} ${this.loc.y} BoundingBox: xRight:${this.boundingBox.xRight} xLeft:${this.boundingBox.xLeft} xUp:${this.boundingBox.yUp} xDown:${this.boundingBox.yDown}`);
         this.moveX = 0;
         this.moveY = 0;
@@ -101,7 +106,16 @@ class Player extends Figure{
             console.log("Reached the water, we are save. Restart");
             resetGame();
         }
+        //Check that we stay inside of the board
+        if(this.loc.x > 420){
+            this.loc.x = 10;
+        }
+            
+        if(this.loc.x < 10){
+            this.loc.x = 420;
+        }
         this.updateBoundingBox();
+        addNewEnemy();
     }
     handleInput(key){
         console.log(key);
@@ -128,13 +142,10 @@ class Player extends Figure{
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-let player = new Player();
+let player = {};
 let allEnemies = [];
-allEnemies.push(new Enemy());
-
-// setTimeout(function(){
-//     allEnemies.push(new Enemy());
-// },1000);
+let currentEnemies;
+resetGame();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -145,14 +156,21 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+function addNewEnemy(){
+    if(currentEnemies < MAX_ENEMIES){
+        setTimeout(() => allEnemies.push(new Enemy()),1000*currentEnemies);
+        currentEnemies++;
+    }
+}
 
 function resetGame(){
     player = new Player();
     allEnemies = [];
     allEnemies.push(new Enemy());
+    currentEnemies = allEnemies.length;
 }
 
 function getRandomIntInclusive(min, max) {
