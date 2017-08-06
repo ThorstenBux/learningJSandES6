@@ -1,10 +1,8 @@
 /*
 Instructions:
-(1) Get the planet data and add the search header.
-(2) Create the first thumbnail with createPlanetThumb(data)
-(3) Handle errors!
-  (a) Pass 'unknown' to the search header.
-  (b) console.log the error.
+(1) Use .map to fetch all the planets in parallel.
+  (a) Call .map on an array and pass it a function.
+  (b) .map will execute the function against each element in the array immediately.
  */
 
 // Inline configuration for jshint below. Prevents `gulp jshint` from failing with quiz starter code.
@@ -41,9 +39,7 @@ Instructions:
    * @return {Promise}    - A Promise that resolves when the XHR succeeds and fails otherwise.
    */
   function get(url) {
-    return fetch(url, {
-      method: 'get'
-    });
+    return fetch(url);
   }
 
   /**
@@ -60,19 +56,15 @@ Instructions:
   window.addEventListener('WebComponentsReady', function() {
     home = document.querySelector('section[data-route="home"]');
     /*
-    Uncomment the next line and start here when you're ready to add the first thumbnail!
-
-    Your code goes here!
+    Your code goes here! Uncomment the next line when you're ready to start!
      */
-    getJSON('../data/earth-like-results.json').then( success => {
-      console.log("JSON data" + success.query);
-      addSearchHeader(success.query);
-      return getJSON(success.results[0]);
-    }, err => {
-      console.log(err);
-      addSearchHeader("Search request error");
-    }).then(searchResult => {
-      createPlanetThumb(searchResult);
-    }, err => console.log("Error processing the planet data"));
+
+    getJSON('../data/earth-like-results.json').then( searchResult => {
+      searchResult.results.map(url => {
+        getJSON(url).then(planet => {
+          createPlanetThumb(planet);
+        }).catch(error => console.log(error));
+      });
+    });
   });
 })(document);
